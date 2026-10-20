@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Secure Vault User Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, #1e3a8a 0%, transparent 35%),
+        radial-gradient(circle at top right, #7c3aed 0%, transparent 35%),
+        #020617;
+    color: #f8fafc;
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    max-width: 1250px;
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    padding: 30px 24px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #2563eb, #4f46e5, #7c3aed);
+    box-shadow: 0 15px 40px rgba(37, 99, 235, .3);
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    top: -125px;
+    right: -65px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h2 {
+    font-weight: 900;
+    letter-spacing: .4px;
+    margin-bottom: 12px;
+}
+
+.hero-subtitle {
+    color: #e0e7ff;
+    margin-bottom: 0;
+    overflow-wrap: anywhere;
+}
+
+.hero-icon {
+    font-size: 43px;
+    margin-bottom: 8px;
+}
+
+.hero-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 10px 18px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    transition: .25s ease;
+}
+
+.profile-btn:hover {
+    color: white;
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    box-shadow: 0 0 20px rgba(59,130,246,.4);
+}
+
+.badge-live {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 10px 16px;
+    border: 1px solid rgba(134,239,172,.35);
+    border-radius: 12px;
+    background: rgba(22,163,74,.18);
+    color: #bbf7d0;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* SECURITY STATUS BAR */
+
+.security-bar {
+    height: 5px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7);
+    box-shadow: 0 0 15px rgba(59,130,246,.2);
+}
+
+/* GLASS CARDS */
+
+.glass {
+    height: 100%;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    background: rgba(255,255,255,.055);
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    backdrop-filter: blur(12px);
+    transition: transform .25s ease, background .25s ease,
+                border-color .25s ease;
+}
+
+.glass:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,.085);
+    border-color: rgba(96,165,250,.35);
+}
+
+.kpi-card {
+    min-height: 155px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+    color: #93c5fd;
+}
+
+.kpi-card h6 {
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+.kpi-card h3 {
+    font-weight: 900;
+    margin-bottom: 0;
+}
+
+/* ACTION CARDS — EQUAL HEIGHT */
+
+.action-row > div {
+    display: flex;
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    min-height: 310px;
+    text-align: center;
+}
+
+.action-card .icon {
+    color: #93c5fd;
+}
+
+.action-card h5 {
+    font-weight: 800;
+    min-height: 26px;
+}
+
+.action-description {
+    min-height: 44px;
+    margin-bottom: 20px;
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 11px;
+    padding: 10px 14px;
+    font-weight: 700;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #4338ca);
+}
+
+.btn-info {
+    background: #0891b2;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #0e7490;
+    color: white;
+}
+
+.btn-success {
+    background: #15803d;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #166534;
+    color: white;
+}
+
+.btn-warning {
+    background: #d97706;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #b45309;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    color: white;
+}
+
+/* PANELS */
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-weight: 800;
+}
+
+.panel-title i {
+    color: #93c5fd;
+    font-size: 20px;
+}
+
+.security-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.security-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    color: #e2e8f0;
+    border-bottom: 1px solid rgba(148,163,184,.12);
+    line-height: 1.5;
+}
+
+.security-list li:last-child {
+    border-bottom: none;
+}
+
+.security-list i {
+    color: #4ade80;
+    margin-top: 4px;
+}
+
+/* QUICK SEARCH */
+
+.search-panel {
+    margin-top: 24px;
+}
+
+.search-option {
+    height: 100%;
+    padding: 17px;
+    border: 1px solid rgba(148,163,184,.18);
+    border-radius: 14px;
+    background: rgba(15,23,42,.55);
+}
+
+.search-option h6 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-weight: 800;
+}
+
+.search-option h6 i {
+    color: #93c5fd;
+}
+
+.form-control {
+    min-height: 43px;
+    border: 1px solid rgba(255,255,255,.17);
+    border-radius: 10px;
+    background: rgba(255,255,255,.07);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.form-control:focus {
+    border-color: #60a5fa;
+    background: rgba(255,255,255,.1);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+}
+
+/* LOGOUT AND FOOTER */
+
+.logout-section {
+    margin-top: 28px;
+}
+
+.footer {
+    margin-top: 20px;
+    padding-bottom: 10px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* SECURITY ALERT */
+
+.security-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: none;
+    max-width: calc(100% - 30px);
+    padding: 16px 22px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(239,68,68,.97),
+                                      rgba(127,29,29,.97));
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 0 25px rgba(239,68,68,.4);
+    backdrop-filter: blur(15px);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 767px) {
+    .hero {
+        padding: 25px 16px;
+        border-radius: 18px;
+    }
+
+    .hero h2 {
+        font-size: 23px;
+    }
+
+    .hero-toolbar {
+        flex-direction: column;
+    }
+
+    .profile-btn,
+    .badge-live {
+        width: 100%;
+    }
+
+    .glass {
+        padding: 20px;
+    }
+
+    .action-card {
+        min-height: auto;
+    }
+
+    .action-card h5,
+    .action-description {
+        min-height: 0;
+    }
+
+    .security-alert {
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        max-width: none;
+        text-align: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container dashboard-container py-4">
+
+    <!-- HERO -->
+
+    <div class="hero text-center">
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+
+            <h2>User Secure Vault System</h2>
+
+            <h5 class="mb-2">
+                Welcome, <strong>{{ username }}</strong>
+            </h5>
+
+            <p class="hero-subtitle">
+                Department: <strong>{{ department }}</strong>
+            </p>
+
+            <div class="hero-toolbar">
+
+                <a href="/profile" class="profile-btn">
+                    <i class="bi bi-person-badge-fill"></i>
+                    Profile
+                </a>
+
+                <span class="badge-live">
+                    <i class="bi bi-shield-check"></i>
+                    Encrypted Storage Active
+                </span>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SECURITY STATUS -->
+
+    <div class="mt-3">
+        <div class="security-bar"></div>
+    </div>
+
+    <!-- KPI CARDS -->
+
+    <div class="row g-3 mt-3">
+
+        <div class="col-md-4">
+            <div class="glass kpi-card text-center">
+                <div class="icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h6>Department Users</h6>
+                <h3>{{ dept_user_count }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass kpi-card text-center">
+                <div class="icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h6>Encrypted Files</h6>
+                <h3>{{ dept_file_count }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass kpi-card text-center">
+                <div class="icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h6>Security Status</h6>
+                <h3 class="text-success">ACTIVE</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN ACTION CARDS -->
+
+    <div class="row g-4 mt-2 action-row">
+
+        <!-- UPLOAD -->
+
+        <div class="col-md-4">
+            <div class="glass action-card">
+
+                <div class="icon">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+
+                <h5>Encrypted Upload</h5>
+
+                <p class="action-description">
+                    Encrypt files before securely storing them in the vault.
+                </p>
+
+                <div class="action-buttons">
+
+                    <a href="/upload" class="btn btn-primary w-100">
+                        <i class="bi bi-file-earmark-lock"></i>
+                        Upload Secure File
+                    </a>
+
+                    <a href="/upload_folder" class="btn btn-info w-100">
+                        <i class="bi bi-folder-fill"></i>
+                        Upload Secure Folder
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- FILES AND FOLDERS -->
+
+        <div class="col-md-4">
+            <div class="glass action-card">
+
+                <div class="icon">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+
+                <h5>Access Files &amp; Folders</h5>
+
+                <p class="action-description">
+                    Browse your department's files and shared storage.
+                </p>
+
+                <div class="action-buttons">
+
+                    <a href="/files" class="btn btn-success w-100">
+                        <i class="bi bi-file-earmark-lock"></i>
+                        View Files
+                    </a>
+
+                    <a href="/folders" class="btn btn-info w-100">
+                        <i class="bi bi-folder2-open"></i>
+                        View Folders
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVITY LOGS -->
+
+        <div class="col-md-4">
+            <div class="glass action-card">
+
+                <div class="icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <h5>Activity Logs</h5>
+
+                <p class="action-description">
+                    Review recorded uploads, downloads and login activities.
+                </p>
+
+                <div class="action-buttons">
+
+                    <a href="/logs" class="btn btn-warning w-100">
+                        <i class="bi bi-clock-history"></i>
+                        View Logs
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SECURITY FEATURES -->
+
+    <div class="glass mt-4">
+
+        <h5 class="panel-title">
+            <i class="bi bi-shield-check"></i>
+             🛡️Security Features
+        </h5>
+
+        <ul class="security-list">
+
+            <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Fernet-based encryption for uploaded files, as implemented in the application.</span>
+            </li>
+
+            <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Automatic session timeout based on the configured session policy.</span>
+            </li>
+
+            <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Failed-login lockout protection, if enabled in the backend.</span>
+            </li>
+
+            <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Activity logging for supported file and authentication events.</span>
+            </li>
+
+            <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Department-based file access controls enforced by the application.</span>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- QUICK SEARCH: FILES AND FOLDERS -->
+
+    <div class="glass search-panel">
+
+        <h5 class="panel-title">
+            <i class="bi bi-search"></i>
+            Quick Search
+        </h5>
+
+        <div class="row g-3">
+
+            <!-- FILE SEARCH: EXISTING ROUTE -->
+
+            <div class="col-md-6">
+
+                <div class="search-option">
+
+                    <h6>
+                        <i class="bi bi-file-earmark-lock"></i>
+                        Search Files
+                    </h6>
+
+                    <form method="GET" action="/files">
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Enter file name..."
+                                aria-label="Search files">
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-search"></i>
+                                Search
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- FOLDER SEARCH -->
+
+            <div class="col-md-6">
+
+                <div class="search-option">
+
+                    <h6>
+                        <i class="bi bi-folder2-open"></i>
+                        Search Folders
+                    </h6>
+
+                    <form method="GET" action="/folders">
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Enter folder name..."
+                                aria-label="Search folders">
+
+                            <button type="submit" class="btn btn-info">
+                                <i class="bi bi-search"></i>
+                                Search
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LOGOUT -->
+
+    <div class="text-center logout-section">
+
+        <a href="/logout" class="btn btn-danger btn-lg px-5">
+            <i class="fa-solid fa-power-off"></i>
+            Logout
+        </a>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+        <i class="bi bi-shield-lock"></i>
+        Secure Vault · Encrypted File System · Activity Monitoring
+    </div>
+
+</div>
+
+<!-- SECURITY ALERT -->
+
+<div id="securityAlert" class="security-alert">
+    Security Policy: Action Restricted
+</div>
+
+<script>
+function showSecurityAlert(message) {
+
+    const alertBox = document.getElementById("securityAlert");
+
+    alertBox.innerHTML =
+        '<i class="bi bi-shield-exclamation me-2"></i>' + message;
+
+    alertBox.style.display = "block";
+
+    setTimeout(function() {
+        alertBox.style.display = "none";
+    }, 3000);
+}
+
+/* Disable right click */
+
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    showSecurityAlert("Right Click Disabled");
+});
+
+/* Disable copy */
+
+document.addEventListener("copy", function(e) {
+    e.preventDefault();
+    showSecurityAlert("Copy Operation Blocked");
+});
+
+/* Keyboard restrictions */
+
+document.addEventListener("keydown", function(e) {
+
+    if (
+        e.key === "PrintScreen" ||
+        e.key === "F12" ||
+        (e.ctrlKey && e.key.toLowerCase() === "u") ||
+        (e.ctrlKey && e.key.toLowerCase() === "s") ||
+        (e.ctrlKey && e.shiftKey &&
+         e.key.toLowerCase() === "i") ||
+        (e.ctrlKey && e.key.toLowerCase() === "c")
+    ) {
+        e.preventDefault();
+        showSecurityAlert("Security Policy: Action Restricted");
+    }
+});
+
+/* Blur page when user leaves tab */
+
+document.addEventListener("visibilitychange", function() {
+
+    if (document.hidden) {
+        document.body.style.filter = "blur(15px)";
+    } else {
+        document.body.style.filter = "blur(0px)";
+    }
+
+});
+</script>
+
+</body>
+</html>
